@@ -1,0 +1,64 @@
+<project name="Ceylon Script module" default="publish" basedir=".">
+    <property file="../ceylon-common/user-build.properties"/>
+    <property file="../ceylon-common/common-build.properties"/>
+ 
+    <!-- Set build directories for all formats. -->
+    <property name="build.dir" value="${basedir}/build" />
+    <property name="build.dist" value="${build.dir}/dist" />
+    <property name="build.dist.repo" value="${build.dist}/repo" />
+    <property name="build.classes" location="${build.dir}/classes" />
+
+    <property name="src" location="src" />
+    <property name="test.src" location="test/src" />
+    <property name="test.reports" location="${build.dir}/test-reports" />
+
+    <!-- Local repository -->
+    <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
+    <property name="ceylon.common.dir" value="com/redhat/ceylon/common/${module.com.redhat.ceylon.common.version}" />
+    <property name="ceylon.common.jar" value="${ceylon.common.dir}/com.redhat.ceylon.common-${module.com.redhat.ceylon.common.version}.jar" />
+    <property name="ceylon.common.lib" location="${ceylon.repo.dir}/${ceylon.common.jar}" />
+
+	<!-- Compiler -->
+	<property name="ceylon.compilerdep.dir" value="com/redhat/ceylon/compiler/java/${module.com.redhat.ceylon.common.version}" />
+	<property name="ceylon.compilerdep.jar" value="${ceylon.compilerdep.dir}/com.redhat.ceylon.compiler.java-${module.com.redhat.ceylon.common.version}.jar" />
+	<property name="ceylon.compiler.lib" value="${ceylon.repo.dir}/${ceylon.compilerdep.jar}" />
+		
+	
+	<property name="ceylon.bootstrap.dir" value="ceylon/bootstrap/${module.com.redhat.ceylon.common.version}" />
+	<property name="ceylon.bootstrap.jar" value="${ceylon.bootstrap.dir}/ceylon.bootstrap-${module.com.redhat.ceylon.common.version}.jar" />
+	<property name="ceylon.bootstrap.lib" value="${ceylon.repo.dir}/${ceylon.bootstrap.jar}" />
+		
+    <!-- Classpath for the build tools. -->
+    <path id="classpath.compiler">
+    	<pathelement path="${ceylon.compiler.lib}" />
+        <pathelement path="${ceylon.common.lib}" />
+    	<pathelement path="${ceylon.bootstrap.lib}" />
+    </path>
+	
+	<target name="clean">
+		<delete dir="build"></delete>
+	</target>
+	
+	<target name="compile.common">
+		<mkdir dir="build/classes"/>
+		<javac srcdir="src/" 
+			destdir="build/classes"
+            debug="true"
+            encoding="UTF8"
+            classpathref="classpath.compiler"
+            bootclasspath="${compile.java.bootclasspath}"/>
+	</target>
+	
+	<target name="jar" depends="compile.common">
+		<mkdir dir="build/jar"/>
+		<jar destfile="build/jar/com.redhat.ceylon.script-${module.com.redhat.ceylon.common.version}.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Bundle-SymbolicName" value="com.redhat.ceylon.scripting"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="publish" depends="jar">
+		
+	</target>
+</project>

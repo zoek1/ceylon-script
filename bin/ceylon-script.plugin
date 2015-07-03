@@ -1,0 +1,5 @@
+; Plugin definition for the "ceylon script" tool
+
+summary=Run Ceylon scripts
+module=com.redhat.ceylon.scripting/@ceylon.version@
+class=com.redhat.ceylon.scripting.CeylonScriptingTool
